@@ -9,17 +9,17 @@ VoroCell::VoroCell() {
     centroid = Vector3(0, 0, 0);
 	index = 0;
 	neighbors = TypedArray<int>();
-	totpoly = 0;
-	totvert = 0;
-	poly_totvert = TypedArray<int>();
-	poly_indices = TypedArray<TypedArray<int>>();
+	num_polys = 0;
+	num_verts = 0;
+	poly_num_verts = TypedArray<int>();
+	poly_indices = TypedArray<int>();
 	verts = TypedArray<Vector3>();
 }
 
 VoroCell::~VoroCell() {
     neighbors.clear();
     verts.clear();
-    poly_totvert.clear();
+    poly_num_verts.clear();
     poly_indices.clear();
 }
 
@@ -27,36 +27,37 @@ VoroHelper::VoroHelper()
 {
     Vector3 min = Vector3(-1, -1, -1);
     Vector3 max = Vector3(1, 1, 1);
-    int num_cells = 10;
+    int num_cells = 1;
+	int i = 0;
+	int n_size = 8;
 
-    container = VoroContainer();
-    particle_order = VoroParticleOrder();
+    container = new voro::container(min[0], max[0], min[1], max[1], min[2], max[2],
+								n_size, n_size, n_size, false, false, false,
+								num_cells);
 
+    particle_order = new voro::particle_order();
     cells = TypedArray<VoroCell>();
-    cells.resize(();
-    const VoroCell &c = VoroCell();
-    cells.fill(c);
+    cells.resize(num_cells);
+	VoroCell c; //better on heap ?
+    cells[0] = Resource::cast_to<VoroCell>(&c);
 }
 
 VoroHelper::~VoroHelper()
 {
-    delete container;
-    delete particle_order;
     cells.clear();
 }
 
 void VoroHelper::compute_cells() {
 	int i = 0, v = 0, fo = 0, fv = 0, n = 0;
-    voro::container* cn = container.handle;
-    voro::particle_order *po = particle_order.handle;
+    voro::container* cn = container;
+    voro::particle_order* po = particle_order;
 	voro::voronoicell_neighbor vc;
 	voro::c_loop_order vl(*cn, *po);
-	VoroCell c;
 
 	if(vl.start()) {
 		do {
+			VoroCell c;
 			if (cn->compute_cell(vc,vl)) {
-
 				// adapted from voro++
 				std::vector<double> verts;
 				std::vector<int> face_orders;
@@ -70,46 +71,42 @@ void VoroHelper::compute_cells() {
 
 				// verts
 				vc.vertices(*pp, pp[1], pp[2], verts);
-				c.totvert = vc.p;
+				c.num_verts = vc.p;
 				c.verts = TypedArray<Vector3>();
-                c.verts.resize(c.totvert);
-				for (v = 0; v < c.totvert; v++) {
+                c.verts.resize(c.num_verts);
+				for (v = 0; v < c.num_verts; v++) {
                     Vector3 cv = c.verts[v];
 					cv[0] = verts[v * 3];
 					cv[1] = verts[v * 3 + 1];
 					cv[2] = verts[v * 3 + 2];
-                    c.verts[v] = cv;
+                    //c.verts[v] = cv;
 				}
 
 				// faces
-				c.totpoly = vc.number_of_faces();
+				c.num_polys = vc.number_of_faces();
 				vc.face_orders(face_orders);
-				c.poly_totvert = TypedArray<int>(); 
-                c.poly_totvert.resize(c.totpoly);
+				c.poly_num_verts = TypedArray<int>(); 
+                c.poly_num_verts.resize(c.num_polys);
 
-				for (fo = 0; fo < c.totpoly; fo++) {
-					c.poly_totvert[fo] = face_orders[fo];
+				for (fo = 0; fo < c.num_polys; fo++) {
+					c.poly_num_verts[fo] = face_orders[fo];
 				}
 
 				vc.face_vertices(face_verts);
-				c.poly_indices = TypedArray<TypedArray<int>>();
-                c.poly_indices.resize(c.totpoly);
+				c.poly_indices = TypedArray<int>();
 				int skip = 0;
-				for (fo = 0; fo < c.totpoly; fo++) {
-					int num_verts = c.poly_totvert[fo];
-                    TypedArray<int> pv = c.poly_indices[fo];
-                    pv.resize(num_verts);
+				for (fo = 0; fo < c.num_polys; fo++) {
+					int num_verts = c.poly_num_verts[fo];
 					for (fv = 0; fv < num_verts; fv++) {
-						pv[fv] = face_verts[skip + 1 + fv];
+						c.poly_indices[skip + 1 + fv] = face_verts[skip + 1 + fv];
 					}
-                    c.poly_indices[fo] = pv;
 					skip += (num_verts+1);
 				}
 
 				// neighbors
 				vc.neighbors(neighbors);
-				c.neighbors.resize(c.totpoly);
-				for (n = 0; n < c.totpoly; n++)
+				c.neighbors.resize(c.num_polys);
+				for (n = 0; n < c.num_polys; n++)
 				{
 					c.neighbors[n] = neighbors[n];
 				}
@@ -124,7 +121,7 @@ void VoroHelper::compute_cells() {
 				c.volume = vc.volume();
 
 				// valid cell, store
-				cells[i] = c;
+				cells[i] = Resource::cast_to<VoroCell>(&c);
 
 			}
 			else { // invalid cell, set NULL XXX TODO (Somehow !!!)
@@ -133,12 +130,12 @@ void VoroHelper::compute_cells() {
 				c.centroid[2] = 0.0;
 				c.index = 0;
 				c.neighbors = TypedArray<int>();
-				c.totpoly = 0;
-				c.totvert = 0;
-				c.poly_totvert = TypedArray<int>();
-				c.poly_indices = TypedArray<TypedArray<int>>();
+				c.num_polys = 0;
+				c.num_verts = 0;
+				c.poly_num_verts = TypedArray<int>();
+				c.poly_indices = TypedArray<int>();
 				c.verts = TypedArray<Vector3>();
-				cells[i] = c;
+				cells[i] = Resource::cast_to<VoroCell>(&c);
 			}
 			i++;
 		}
@@ -149,8 +146,8 @@ void VoroHelper::compute_cells() {
 
 void VoroHelper::put(int n, double x,double y,double z)
 {
-	voro::container* c = container.handle;
-	voro::particle_order* po = particle_order.handle;
+	voro::container* c = container;
+	voro::particle_order* po = particle_order;
 	
 	if (po)
 	{
@@ -158,37 +155,20 @@ void VoroHelper::put(int n, double x,double y,double z)
 	}
 }
 
-VoroContainer::VoroContainer() {
-    int n_size = 8;
+void VoroHelper::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("get_max"), &VoroHelper::get_max);
+	ClassDB::bind_method(D_METHOD("set_max", "p_max"), &VoroHelper::set_max);
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "max"), "set_max", "get_max");
 
-    min = Vector3(-1, -1, -1);
-    max = Vector3(1, 1, 1);
-    num_cells = 10;
+	ClassDB::bind_method(D_METHOD("get_min"), &VoroHelper::get_min);
+	ClassDB::bind_method(D_METHOD("set_min", "p_min"), &VoroHelper::set_min);
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "min"), "set_min", "get_min");
 
-    handle = new voro::container(min[0], max[0], min[1], max[1], min[2], max[2],
-								n_size, n_size, n_size, false, false, false,
-								num_cells);
-}
+	ClassDB::bind_method(D_METHOD("get_num_cells"), &VoroHelper::get_num_cells);
+	ClassDB::bind_method(D_METHOD("set_num_cells", "p_max"), &VoroHelper::set_num_cells);
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "num_cells"), "set_num_cells", "get_num_cells");
 
-VoroContainer::VoroContainer(const VoroContainer& con) {
-    min = con.min;
-    max = con.max;
-    num_cells = con.num_cells;
-    int n_size = 8;
-
-    handle = new voro::container(min[0], max[0], min[1], max[1], min[2], max[2],
-								n_size, n_size, n_size, false, false, false,
-								num_cells);
-};
-
-VoroContainer::~VoroContainer() {
-    delete handle;
-}
-
-VoroParticleOrder::VoroParticleOrder() {
-    handle = new voro::particle_order();
-}
-
-VoroParticleOrder::~VoroParticleOrder() {
-    delete handle;
+	ClassDB::bind_method(D_METHOD("get_cells"), &VoroHelper::get_cells);
+	ClassDB::bind_method(D_METHOD("put"), &VoroHelper::put);
+	ClassDB::bind_method(D_METHOD("compute_cells"), &VoroHelper::compute_cells);
 }

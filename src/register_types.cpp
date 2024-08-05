@@ -14,8 +14,6 @@ void initialize_fracture_module(ModuleInitializationLevel p_level) {
 	}
 
 	GDREGISTER_CLASS(VoroCell);
-	GDREGISTER_CLASS(VoroContainer);
-	GDREGISTER_CLASS(VoroParticleOrder);
 	GDREGISTER_CLASS(VoroHelper);
 	GDREGISTER_CLASS(Fracture3D);
 }

@@ -20,3 +20,7 @@ Godot Fracture System
 ideas:
 - different fracture patterns ? wood, glass , bricks etc ?
 - clustering / hierarchy of shards via parenting (keep parent meshes, but not visual, no collision shape)
+
+
+VoroHelper and VoroCells could be resources, you can set/get min, max and num_cells and get the cells, volume, neighbors 
+VoroContainer and VoroParticle Order are just voro wrappers, maybe those are replaced by the direct voro:: functions and classes

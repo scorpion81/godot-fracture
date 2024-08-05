@@ -15,6 +15,7 @@ class Fracture3D : public MeshInstance3D {
 private:
     int shard_count;
 	int shard_seed;
+	TypedArray<VoroCell> cells;
 
 protected:
 	static void _bind_methods();
@@ -31,7 +32,9 @@ public:
 	void set_shard_seed(const int p_shard_seed);
 	int get_shard_seed() const;
 
-	void execute_fracture() const;
+	void execute_fracture();
+
+	TypedArray<VoroCell> get_cells() { return cells;}; 
 };
 
 }

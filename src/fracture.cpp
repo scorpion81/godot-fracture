@@ -23,6 +23,10 @@ void Fracture3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_shard_seed", "p_shard_seed"), &Fracture3D::set_shard_seed);
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "shard_seed"), "set_shard_seed", "get_shard_seed");
 
+	ClassDB::bind_method(D_METHOD("get_cells"), &Fracture3D::get_cells);
+	// ClassDB::bind_method(D_METHOD("set_shard_seed", "p_shard_seed"), &Fracture3D::set_shard_seed);
+	//ADD_PROPERTY(PropertyInfo(Variant::INT, "shard_seed"), "set_shard_seed", "get_shard_seed");
+
 	//ADD_SIGNAL(MethodInfo("position_changed", PropertyInfo(Variant::OBJECT, "node"), PropertyInfo(Variant::VECTOR2, "new_pos")))
 }
 
@@ -47,8 +51,7 @@ int Fracture3D::get_shard_seed() const {
 }
 
 
-
-void Fracture3D::execute_fracture() const {
+void Fracture3D::execute_fracture() {
 	// get mesh from current mesh instance
 	// construct bounding box
 
@@ -88,8 +91,11 @@ void Fracture3D::execute_fracture() const {
 	
 	/* we expect as many raw cells as we have particles */
 	//voro_cells = cells_new(pointcloud->totpoints);
+	vh.compute_cells();
 
-	
+	cells.clear();
+	cells.append_array(vh.get_cells());
+
 	// compute voronoi cells
 	/*Compute directly...*/
 	// vc->compute_cell()

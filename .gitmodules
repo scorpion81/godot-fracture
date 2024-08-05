@@ -5,3 +5,6 @@
 [submodule "voro"]
 	path = voro
 	url = https://github.com/chr1shr/voro
+[submodule "src/voro"]
+	path = src/voro
+	url = https://github.com/chr1shr/voro
