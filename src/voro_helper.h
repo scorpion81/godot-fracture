@@ -4,7 +4,7 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/resource.hpp>
 
-#include "../voro/src/voro++.hh"
+#include <voro/src/voro++.hh>
 
 using namespace voro;
 

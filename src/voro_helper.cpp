@@ -1,5 +1,4 @@
 #include <voro_helper.h>
-#include "../voro/src/voro++.cc"
 
 using namespace godot;
 
