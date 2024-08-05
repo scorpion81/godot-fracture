@@ -1,0 +1,22 @@
+Godot Fracture System
+=====================
+
+- prefracture 3D meshes to voronoi shards in multiple steps:
+    -   create boundbox of mesh or existing separate mesh islands
+    -   apply 3D voronoi fracture on them, for example by integrating voro++ (or do we have some voronoi method in godot ?)
+    -   do boolean intersection of each shard against the original geometry 
+        - either shard by shard, or in one go. but make sure to use GMP or some "exact" boolean / csg methods from godot
+    -   result should be a collection of Shard nodes (children of original mesh node)
+    -   or it could be a shards resource instead, array of shard resources
+    
+- fracturing can happen in editor for example when changing parameters, there must be "debug" switches whether to execute boolean 
+  also each time (slow)
+
+- dynamic fracture (event based) can be mesh swap or real fracture in running game (but only on simple geometry, low shard count)
+- this will require a prefracture step, otherwise meshes can look weird or things become very slow
+
+- physics and constraints will be added by calling godot methods accordingly, either 
+
+ideas:
+- different fracture patterns ? wood, glass , bricks etc ?
+- clustering / hierarchy of shards via parenting (keep parent meshes, but not visual, no collision shape)

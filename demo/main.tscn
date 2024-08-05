@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://dl2mlxbkhdrwl"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_vwey3"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_gq4mw"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_reptw"]
+
+[node name="Node" type="Node"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_vwey3")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="MeshInstance3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MeshInstance3D/RigidBody3D"]
+mesh = SubResource("BoxMesh_gq4mw")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/RigidBody3D"]
+shape = SubResource("ConvexPolygonShape3D_reptw")
