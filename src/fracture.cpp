@@ -24,7 +24,7 @@ void Fracture3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "shard_seed"), "set_shard_seed", "get_shard_seed");
 
 	ClassDB::bind_method(D_METHOD("get_cells"), &Fracture3D::get_cells);
-	// ClassDB::bind_method(D_METHOD("set_shard_seed", "p_shard_seed"), &Fracture3D::set_shard_seed);
+    ClassDB::bind_method(D_METHOD("execute_fracture"), &Fracture3D::execute_fracture);
 	//ADD_PROPERTY(PropertyInfo(Variant::INT, "shard_seed"), "set_shard_seed", "get_shard_seed");
 
 	//ADD_SIGNAL(MethodInfo("position_changed", PropertyInfo(Variant::OBJECT, "node"), PropertyInfo(Variant::VECTOR2, "new_pos")))
@@ -87,6 +87,7 @@ void Fracture3D::execute_fracture() {
 		double z = rng->randf_range(min[2], max[2]);
 
 		vh.put(s, x, y, z);
+		printf("%d %f %f %f\n", s, x, y, z);
 	}
 	
 	/* we expect as many raw cells as we have particles */

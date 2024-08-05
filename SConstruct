@@ -18,8 +18,8 @@ sources = Glob("src/*.cpp")
 sources.extend(Glob("src/voro/src/*.cc"))
 sources = [s for s in sources if not "_wl" in s.name]
 sources = [s for s in sources if not "voro++" in s.name]
-names = [s.name for s in sources]
-print(names)
+#names = [s.name for s in sources]
+#print(names)
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(
