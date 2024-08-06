@@ -21,6 +21,9 @@ sources = [s for s in sources if not "voro++" in s.name]
 #names = [s.name for s in sources]
 #print(names)
 
+if env["target"] == "template_debug":
+    env.Append(CPPDEFINES=["DEBUG_ENABLED", "DEBUG_METHODS_ENABLED"])
+
 if env["platform"] == "macos":
     library = env.SharedLibrary(
         "demo/bin/libfracture.{}.{}.framework/libfracture.{}.{}".format(

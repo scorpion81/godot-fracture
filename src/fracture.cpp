@@ -1,5 +1,6 @@
 #include "fracture.h"
 #include <godot_cpp/core/class_db.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
 
 using namespace godot;
 
@@ -24,6 +25,14 @@ void Fracture3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "shard_seed"), "set_shard_seed", "get_shard_seed");
 
 	ClassDB::bind_method(D_METHOD("get_cells"), &Fracture3D::get_cells);
+	ClassDB::bind_method(D_METHOD("set_cells", "p_cells"), &Fracture3D::set_cells);
+
+	ADD_PROPERTY(
+		PropertyInfo(Variant::ARRAY, "cells", PROPERTY_HINT_TYPE_STRING, 
+		String::num(Variant::OBJECT) + "/" + String::num(PROPERTY_HINT_RESOURCE_TYPE) + ":VoroCell"), 
+		"set_cells", "get_cells"
+	);
+
     ClassDB::bind_method(D_METHOD("execute_fracture"), &Fracture3D::execute_fracture);
 	//ADD_PROPERTY(PropertyInfo(Variant::INT, "shard_seed"), "set_shard_seed", "get_shard_seed");
 
@@ -62,6 +71,8 @@ void Fracture3D::execute_fracture() {
 	// make a voro++ container from untransformed bbox, add transformed points into it, discard points out of box
 
 	Ref<Mesh> me = get_mesh();
+	UtilityFunctions::print(me);
+
 	AABB bbox = me->get_aabb();
 	Vector3 min = bbox.get_position();
 	Vector3 max = bbox.get_end();
@@ -76,10 +87,14 @@ void Fracture3D::execute_fracture() {
 	rng->randomize();
 	rng->set_seed(shard_seed);
 
+	UtilityFunctions::print(shard_count, shard_seed);
+
 	VoroHelper vh = VoroHelper();
 	vh.set_min(min);
 	vh.set_max(max);
 	vh.set_num_cells(shard_count);
+	vh.new_container();
+	vh.new_particle_order();
 
 	for (s = 0; s < shard_count; s++) {
 		double x = rng->randf_range(min[0], max[0]);
@@ -87,15 +102,21 @@ void Fracture3D::execute_fracture() {
 		double z = rng->randf_range(min[2], max[2]);
 
 		vh.put(s, x, y, z);
-		printf("%d %f %f %f\n", s, x, y, z);
+		//print("%d %f %f %f\n", s, x, y, z);
+		UtilityFunctions::print(s, x, y, z);
 	}
 	
 	/* we expect as many raw cells as we have particles */
 	//voro_cells = cells_new(pointcloud->totpoints);
+	UtilityFunctions::print("computing cells");
 	vh.compute_cells();
+	UtilityFunctions::print("computed cells");
 
-	cells.clear();
-	cells.append_array(vh.get_cells());
+	UtilityFunctions::print(vh.get_cells());
+
+	//cells.clear();
+	//cells.append_array(vh.get_cells());
+	set_cells(vh.get_cells())
 
 	// compute voronoi cells
 	/*Compute directly...*/

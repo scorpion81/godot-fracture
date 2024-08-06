@@ -10,19 +10,19 @@
 
 [node name="Node" type="Node"]
 
-[node name="MeshInstance3D" type="Fracture3D" parent="."]
+[node name="Fracture3D" type="Fracture3D" parent="."]
 shard_count = 4
 mesh = SubResource("SphereMesh_vwey3")
 script = ExtResource("1_afq18")
 
-[node name="RigidBody3D" type="RigidBody3D" parent="MeshInstance3D"]
+[node name="RigidBody3D" type="RigidBody3D" parent="Fracture3D"]
 visible = false
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="MeshInstance3D/RigidBody3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Fracture3D/RigidBody3D"]
 visible = false
 mesh = SubResource("BoxMesh_gq4mw")
 skeleton = NodePath("../..")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/RigidBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Fracture3D/RigidBody3D"]
 visible = false
 shape = SubResource("ConvexPolygonShape3D_reptw")

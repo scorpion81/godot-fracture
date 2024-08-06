@@ -27,18 +27,11 @@ VoroHelper::VoroHelper()
     Vector3 min = Vector3(-1, -1, -1);
     Vector3 max = Vector3(1, 1, 1);
     int num_cells = 1;
-	int i = 0;
-	int n_size = 8;
-
-    container = new voro::container(min[0], max[0], min[1], max[1], min[2], max[2],
-								n_size, n_size, n_size, false, false, false,
-								num_cells);
-
-    particle_order = new voro::particle_order();
     cells = TypedArray<VoroCell>();
     cells.resize(num_cells);
-	VoroCell* c = new VoroCell();
-    cells[0] = Resource::cast_to<VoroCell>(c);
+	VoroCell *c = new VoroCell();
+	UtilityFunctions::print(c);
+    cells[0] = c; //Resource::cast_to<VoroCell>(c);
 }
 
 VoroHelper::~VoroHelper()
@@ -53,12 +46,15 @@ void VoroHelper::compute_cells() {
 	voro::voronoicell_neighbor vc;
 	voro::c_loop_order vl(*cn, *po);
 
+	cells.clear();
+
 	if(vl.start()) {
 		do {
-			VoroCell* c = new VoroCell();
+			VoroCell* cx = new VoroCell();
+			VoroCell c = *cx;
 			if (cn->compute_cell(vc,vl)) {
 				// adapted from voro++
-				std::vector<double> verts;
+				std::vector<double> vertices;
 				std::vector<int> face_orders;
 				std::vector<int> face_verts;
 				std::vector<int> neighbors;
@@ -66,80 +62,111 @@ void VoroHelper::compute_cells() {
 				pp = vl.p[vl.ijk]+vl.ps*vl.q;
 
 				// cell particle index
-				c->index = cn->id[vl.ijk][vl.q];
+				c.set_index(cn->id[vl.ijk][vl.q]);
 
 				// verts
-				vc.vertices(*pp, pp[1], pp[2], verts);
-				c->num_verts = vc.p;
-				c->verts = TypedArray<Vector3>();
-                c->verts.resize(c->num_verts);
-				for (v = 0; v < c->num_verts; v++) {
-                    Vector3 cv = c->verts[v];
-					cv[0] = verts[v * 3];
-					cv[1] = verts[v * 3 + 1];
-					cv[2] = verts[v * 3 + 2];
-                    //c.verts[v] = cv;
+				vc.vertices(*pp, pp[1], pp[2], vertices);
+				c.set_num_verts(vc.p);
+				TypedArray<Vector3> verts;
+                verts.resize(c.get_num_verts());
+				for (v = 0; v < c.get_num_verts(); v++) {
+                    Vector3 cv = verts[v];
+					cv[0] = vertices[v * 3];
+					cv[1] = vertices[v * 3 + 1];
+					cv[2] = vertices[v * 3 + 2];
+                    verts[v] = cv;
 				}
+				c.set_verts(verts);
 
 				// faces
-				c->num_polys = vc.number_of_faces();
+				c.set_num_polys(vc.number_of_faces());
 				vc.face_orders(face_orders);
-				c->poly_num_verts = TypedArray<int>(); 
-                c->poly_num_verts.resize(c->num_polys);
+				TypedArray<int> poly_num_verts;
+                poly_num_verts.resize(c.get_num_polys());
 
-				for (fo = 0; fo < c->num_polys; fo++) {
-					c->poly_num_verts[fo] = face_orders[fo];
+				for (fo = 0; fo < c.get_num_polys(); fo++) {
+					poly_num_verts[fo] = face_orders[fo];
 				}
 
 				vc.face_vertices(face_verts);
-				c->poly_indices = TypedArray<int>();
+				TypedArray<int> poly_indices;
 				int skip = 0;
-				for (fo = 0; fo < c->num_polys; fo++) {
-					int num_verts = c->poly_num_verts[fo];
+				for (fo = 0; fo < c.get_num_polys(); fo++) {
+					int num_verts = poly_num_verts[fo];
 					for (fv = 0; fv < num_verts; fv++) {
-						c->poly_indices[skip + 1 + fv] = face_verts[skip + 1 + fv];
+						poly_indices.append(face_verts[skip + 1 + fv]);
 					}
 					skip += (num_verts+1);
 				}
 
+				c.set_poly_num_verts(poly_num_verts);
+				c.set_poly_indices(poly_indices);
+
 				// neighbors
 				vc.neighbors(neighbors);
-				c->neighbors.resize(c->num_polys);
-				for (n = 0; n < c->num_polys; n++)
+				TypedArray<int> neigh;
+				neigh.resize(c.get_num_polys());
+				for (n = 0; n < c.get_num_polys(); n++)
 				{
-					c->neighbors[n] = neighbors[n];
+					neigh[n] = neighbors[n];
 				}
+				c.set_neighbors(neigh);
 
 				// centroid
 				vc.centroid(centroid[0], centroid[1], centroid[2]);
-				c->centroid[0] = centroid[0] + *pp;
-				c->centroid[1] = centroid[1] + pp[1];
-				c->centroid[2] = centroid[2] + pp[2];
+				Vector3 centr;
+				centr[0] = centroid[0] + *pp;
+				centr[1] = centroid[1] + pp[1];
+				centr[2] = centroid[2] + pp[2];
+				c.set_centroid(centr);
 
 				// volume
-				c->volume = vc.volume();
+				c.set_volume(vc.volume());
 
 				// valid cell, store
-				cells[i] = Resource::cast_to<VoroCell>(c);
+				UtilityFunctions::print(cx);
+				UtilityFunctions::print(Resource::cast_to<VoroCell>(cx));
+				cells.append(cx); //Resource::cast_to<VoroCell>(c));
 
 			}
 			else { // invalid cell, set NULL XXX TODO (Somehow !!!)
-				c->centroid[0] = 0.0;
-				c->centroid[1] = 0.0;
-				c->centroid[2] = 0.0;
-				c->index = 0;
-				c->neighbors = TypedArray<int>();
-				c->num_polys = 0;
-				c->num_verts = 0;
-				c->poly_num_verts = TypedArray<int>();
-				c->poly_indices = TypedArray<int>();
-				c->verts = TypedArray<Vector3>();
-				cells[i] = Resource::cast_to<VoroCell>(c);
+				Vector3 centr = Vector3(0, 0, 0);
+				c.set_centroid(centr);
+				c.set_index(0);
+				c.set_neighbors(TypedArray<int>());
+				c.set_num_polys(0);
+				c.set_num_verts(0);
+				c.set_poly_num_verts(TypedArray<int>());
+				c.set_poly_indices(TypedArray<int>());
+				c.set_verts(TypedArray<Vector3>());
+				//UtilityFunctions::print(&c);
+				cells.append(cx); //Resource::cast_to<VoroCell>(c));
 			}
 			i++;
 		}
 		while(vl.inc());
 	}
+}
+
+void VoroHelper::new_container() {
+	int n_size = 8;
+
+	if (container != nullptr) {
+		delete container;
+	}
+
+    container = new voro::container(min[0], max[0], min[1], max[1], min[2], max[2],
+								n_size, n_size, n_size, false, false, false,
+								num_cells); 
+}
+
+void VoroHelper::new_particle_order() {
+	if (particle_order != nullptr) {
+		delete particle_order;
+		particle_order = nullptr;
+	}
+
+	particle_order = new voro::particle_order();
 }
 
 
@@ -168,8 +195,19 @@ void VoroHelper::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "num_cells"), "set_num_cells", "get_num_cells");
 
 	ClassDB::bind_method(D_METHOD("get_cells"), &VoroHelper::get_cells);
+	ClassDB::bind_method(D_METHOD("set_cells", "p_cells"), &VoroHelper::set_cells);
+
+	ADD_PROPERTY(
+		PropertyInfo(Variant::ARRAY, "cells", PROPERTY_HINT_TYPE_STRING,
+		String::num(Variant::OBJECT) + "/" + String::num(PROPERTY_HINT_RESOURCE_TYPE) + ":VoroCell"), 
+		"set_cells", "get_cells"
+	);
+
+
 	ClassDB::bind_method(D_METHOD("put"), &VoroHelper::put);
 	ClassDB::bind_method(D_METHOD("compute_cells"), &VoroHelper::compute_cells);
+	ClassDB::bind_method(D_METHOD("new_container"), &VoroHelper::new_container);
+	ClassDB::bind_method(D_METHOD("new_particle_order"), &VoroHelper::new_particle_order);
 }
 
 void VoroCell::_bind_methods() {
@@ -186,4 +224,26 @@ void VoroCell::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_volume"), &VoroCell::get_volume);
 	ClassDB::bind_method(D_METHOD("get_num_verts"), &VoroCell::get_num_verts);
 	ClassDB::bind_method(D_METHOD("get_num_polys"), &VoroCell::get_num_polys);
+
+	ClassDB::bind_method(D_METHOD("set_verts", "p_verts"), &VoroCell::set_verts);
+	ClassDB::bind_method(D_METHOD("set_poly_num_verts", "p_poly_num_verts"), &VoroCell::set_poly_num_verts);
+	ClassDB::bind_method(D_METHOD("set_poly_indices", "p_poly_indices"), &VoroCell::set_poly_indices);
+
+	ClassDB::bind_method(D_METHOD("set_neighbors", "p_neighbors"), &VoroCell::set_neighbors);
+	ClassDB::bind_method(D_METHOD("set_centroid", "p_centroid"), &VoroCell::set_centroid);
+	ClassDB::bind_method(D_METHOD("set_index", "p_index"), &VoroCell::set_index);
+
+	ClassDB::bind_method(D_METHOD("set_volume", "p_volume"), &VoroCell::set_volume);
+	ClassDB::bind_method(D_METHOD("set_num_verts", "p_num_verts"), &VoroCell::set_num_verts);
+	ClassDB::bind_method(D_METHOD("set_num_polys", "p_num_polys"), &VoroCell::set_num_polys);
+
+
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "verts"), "set_verts", "get_verts");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "poly_num_verts"), "set_poly_num_verts", "get_poly_num_verts");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "poly_indices"), "set_poly_indices", "get_poly_indices");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "neighbors"), "set_neighbors", "get_neighbors");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "centroid"), "set_centroid", "get_centroid");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volume"), "set_volume", "get_volume");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "num_verts"), "set_num_verts", "get_num_verts");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "num_polys"), "set_num_polys", "get_num_polys");
 }

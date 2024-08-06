@@ -1,6 +1,7 @@
 #include "register_types.h"
 
 #include "fracture.h"
+#include "voro_helper.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
