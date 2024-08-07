@@ -1,4 +1,5 @@
 #include <voro_helper.h>
+#include <memory>
 
 using namespace godot;
 
@@ -22,16 +23,27 @@ VoroCell::~VoroCell() {
     poly_indices.clear();
 }
 
+VoroCell::VoroCell(VoroCell& cell) {
+	centroid = cell.centroid;
+	index = cell.index;
+	neighbors.append_array(cell.get_neighbors());
+	num_polys = cell.num_polys;
+	num_verts = cell.num_verts;
+	poly_num_verts.append_array(cell.get_poly_num_verts());
+	poly_indices.append_array(cell.get_poly_indices());
+	verts.append_array(cell.get_verts());
+}
+
 VoroHelper::VoroHelper()
 {
     Vector3 min = Vector3(-1, -1, -1);
     Vector3 max = Vector3(1, 1, 1);
     int num_cells = 1;
     cells = TypedArray<VoroCell>();
-    cells.resize(num_cells);
-	VoroCell *c = new VoroCell();
+	Ref<VoroCell> c(memnew(VoroCell));
 	UtilityFunctions::print(c);
-    cells[0] = c; //Resource::cast_to<VoroCell>(c);
+    cells.append(c);
+	UtilityFunctions::print(cells[0]);
 }
 
 VoroHelper::~VoroHelper()
@@ -50,8 +62,9 @@ void VoroHelper::compute_cells() {
 
 	if(vl.start()) {
 		do {
-			VoroCell* cx = new VoroCell();
-			VoroCell c = *cx;
+			//std::shared_ptr<VoroCell> cx = std::make_shared<VoroCell>(new VoroCell);
+			Ref<VoroCell> c(memnew(VoroCell));
+
 			if (cn->compute_cell(vc,vl)) {
 				// adapted from voro++
 				std::vector<double> vertices;
@@ -62,36 +75,36 @@ void VoroHelper::compute_cells() {
 				pp = vl.p[vl.ijk]+vl.ps*vl.q;
 
 				// cell particle index
-				c.set_index(cn->id[vl.ijk][vl.q]);
+				c->set_index(cn->id[vl.ijk][vl.q]);
 
 				// verts
 				vc.vertices(*pp, pp[1], pp[2], vertices);
-				c.set_num_verts(vc.p);
+				c->set_num_verts(vc.p);
 				TypedArray<Vector3> verts;
-                verts.resize(c.get_num_verts());
-				for (v = 0; v < c.get_num_verts(); v++) {
+                verts.resize(c->get_num_verts());
+				for (v = 0; v < c->get_num_verts(); v++) {
                     Vector3 cv = verts[v];
 					cv[0] = vertices[v * 3];
 					cv[1] = vertices[v * 3 + 1];
 					cv[2] = vertices[v * 3 + 2];
                     verts[v] = cv;
 				}
-				c.set_verts(verts);
+				c->set_verts(verts);
 
 				// faces
-				c.set_num_polys(vc.number_of_faces());
+				c->set_num_polys(vc.number_of_faces());
 				vc.face_orders(face_orders);
 				TypedArray<int> poly_num_verts;
-                poly_num_verts.resize(c.get_num_polys());
+                poly_num_verts.resize(c->get_num_polys());
 
-				for (fo = 0; fo < c.get_num_polys(); fo++) {
+				for (fo = 0; fo < c->get_num_polys(); fo++) {
 					poly_num_verts[fo] = face_orders[fo];
 				}
 
 				vc.face_vertices(face_verts);
 				TypedArray<int> poly_indices;
 				int skip = 0;
-				for (fo = 0; fo < c.get_num_polys(); fo++) {
+				for (fo = 0; fo < c->get_num_polys(); fo++) {
 					int num_verts = poly_num_verts[fo];
 					for (fv = 0; fv < num_verts; fv++) {
 						poly_indices.append(face_verts[skip + 1 + fv]);
@@ -99,18 +112,18 @@ void VoroHelper::compute_cells() {
 					skip += (num_verts+1);
 				}
 
-				c.set_poly_num_verts(poly_num_verts);
-				c.set_poly_indices(poly_indices);
+				c->set_poly_num_verts(poly_num_verts);
+				c->set_poly_indices(poly_indices);
 
 				// neighbors
 				vc.neighbors(neighbors);
 				TypedArray<int> neigh;
-				neigh.resize(c.get_num_polys());
-				for (n = 0; n < c.get_num_polys(); n++)
+				neigh.resize(c->get_num_polys());
+				for (n = 0; n < c->get_num_polys(); n++)
 				{
 					neigh[n] = neighbors[n];
 				}
-				c.set_neighbors(neigh);
+				c->set_neighbors(neigh);
 
 				// centroid
 				vc.centroid(centroid[0], centroid[1], centroid[2]);
@@ -118,30 +131,36 @@ void VoroHelper::compute_cells() {
 				centr[0] = centroid[0] + *pp;
 				centr[1] = centroid[1] + pp[1];
 				centr[2] = centroid[2] + pp[2];
-				c.set_centroid(centr);
+				c->set_centroid(centr);
 
 				// volume
-				c.set_volume(vc.volume());
+				c->set_volume(vc.volume());
 
 				// valid cell, store
-				UtilityFunctions::print(cx);
-				UtilityFunctions::print(Resource::cast_to<VoroCell>(cx));
-				cells.append(cx); //Resource::cast_to<VoroCell>(c));
-
+				// UtilityFunctions::print(c);
+				//cells.append(c);
+				//cells.append(Object::cast_to<VoroCell>(cx));
 			}
-			else { // invalid cell, set NULL XXX TODO (Somehow !!!)
+
+			cells.append(c);
+			UtilityFunctions::print(cells[i]);
+
+			/*else { // invalid cell, set NULL XXX TODO (Somehow !!!)
 				Vector3 centr = Vector3(0, 0, 0);
-				c.set_centroid(centr);
-				c.set_index(0);
-				c.set_neighbors(TypedArray<int>());
-				c.set_num_polys(0);
+				c->set_centroid(centr);
+				c->set_index(0);
+				c->set_neighbors(TypedArray<int>());
+				c->set_num_polys(0);
 				c.set_num_verts(0);
 				c.set_poly_num_verts(TypedArray<int>());
 				c.set_poly_indices(TypedArray<int>());
 				c.set_verts(TypedArray<Vector3>());
 				//UtilityFunctions::print(&c);
-				cells.append(cx); //Resource::cast_to<VoroCell>(c));
-			}
+				//cells.append(VoroCell::cast_to<Variant>(cx));
+				//cells.append(Object::cast_to<VoroCell>(cx));
+				UtilityFunctions::print(cells[i]);
+				//cells.append(cx); //Resource::cast_to<VoroCell>(c));
+			}*/
 			i++;
 		}
 		while(vl.inc());

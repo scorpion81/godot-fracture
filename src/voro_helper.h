@@ -34,6 +34,7 @@ class VoroCell : public Resource {
     
         VoroCell();
         ~VoroCell();
+        VoroCell(VoroCell& cell);
         
         //those are bound to readonly properties later
         TypedArray<Vector3> get_verts() { return verts; };
@@ -92,7 +93,7 @@ class VoroHelper : public Resource {
         Vector3 get_max() { return max; }
 
         TypedArray<VoroCell> get_cells() { return cells;}
-        void set_cells(TypedArray<VoroCell> p_cells) { cells = p_cells; };
+        void set_cells(TypedArray<VoroCell> p_cells) { cells.clear(); cells.append_array(p_cells); };
 };
 
 }

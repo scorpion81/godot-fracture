@@ -89,19 +89,19 @@ void Fracture3D::execute_fracture() {
 
 	UtilityFunctions::print(shard_count, shard_seed);
 
-	VoroHelper vh = VoroHelper();
-	vh.set_min(min);
-	vh.set_max(max);
-	vh.set_num_cells(shard_count);
-	vh.new_container();
-	vh.new_particle_order();
+	Ref<VoroHelper> vh(memnew(VoroHelper));
+	vh->set_min(min);
+	vh->set_max(max);
+	vh->set_num_cells(shard_count);
+	vh->new_container();
+	vh->new_particle_order();
 
 	for (s = 0; s < shard_count; s++) {
 		double x = rng->randf_range(min[0], max[0]);
 		double y = rng->randf_range(min[1], max[1]);
 		double z = rng->randf_range(min[2], max[2]);
 
-		vh.put(s, x, y, z);
+		vh->put(s, x, y, z);
 		//print("%d %f %f %f\n", s, x, y, z);
 		UtilityFunctions::print(s, x, y, z);
 	}
@@ -109,14 +109,15 @@ void Fracture3D::execute_fracture() {
 	/* we expect as many raw cells as we have particles */
 	//voro_cells = cells_new(pointcloud->totpoints);
 	UtilityFunctions::print("computing cells");
-	vh.compute_cells();
+	vh->compute_cells();
 	UtilityFunctions::print("computed cells");
 
-	UtilityFunctions::print(vh.get_cells());
+	UtilityFunctions::print(vh->get_cells());
 
 	//cells.clear();
 	//cells.append_array(vh.get_cells());
-	set_cells(vh.get_cells())
+	set_cells(vh->get_cells());
+	//memdelete(vh);
 
 	// compute voronoi cells
 	/*Compute directly...*/

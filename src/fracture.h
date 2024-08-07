@@ -35,7 +35,7 @@ public:
 	void execute_fracture();
 
 	TypedArray<VoroCell> get_cells() { return cells;}; 
-	void set_cells(TypedArray<VoroCell> p_cells) { cells = p_cells; };
+	void set_cells(TypedArray<VoroCell> p_cells) { cells.clear(); cells.append_array(p_cells); };
 };
 
 }

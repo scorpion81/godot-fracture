@@ -1,6 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://dl2mlxbkhdrwl"]
+[gd_scene load_steps=6 format=3 uid="uid://dl2mlxbkhdrwl"]
 
 [ext_resource type="Script" path="res://Fracture.gd" id="1_afq18"]
+
+[sub_resource type="VoroCell" id="VoroCell_byca0"]
+volume = 0.0
 
 [sub_resource type="SphereMesh" id="SphereMesh_vwey3"]
 
@@ -12,6 +15,7 @@
 
 [node name="Fracture3D" type="Fracture3D" parent="."]
 shard_count = 4
+cells = Array[VoroCell]([SubResource("VoroCell_byca0")])
 mesh = SubResource("SphereMesh_vwey3")
 script = ExtResource("1_afq18")
 
