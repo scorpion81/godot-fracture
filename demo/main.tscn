@@ -1,11 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://dl2mlxbkhdrwl"]
+[gd_scene load_steps=5 format=3 uid="uid://dl2mlxbkhdrwl"]
 
 [ext_resource type="Script" path="res://Fracture.gd" id="1_afq18"]
 
-[sub_resource type="VoroCell" id="VoroCell_byca0"]
-volume = 0.0
-
-[sub_resource type="SphereMesh" id="SphereMesh_vwey3"]
+[sub_resource type="BoxMesh" id="BoxMesh_fo5ff"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_gq4mw"]
 
@@ -14,9 +11,9 @@ volume = 0.0
 [node name="Node" type="Node"]
 
 [node name="Fracture3D" type="Fracture3D" parent="."]
-shard_count = 4
-cells = Array[VoroCell]([SubResource("VoroCell_byca0")])
-mesh = SubResource("SphereMesh_vwey3")
+shard_count = 200
+shard_seed = 2
+mesh = SubResource("BoxMesh_fo5ff")
 script = ExtResource("1_afq18")
 
 [node name="RigidBody3D" type="RigidBody3D" parent="Fracture3D"]
@@ -30,3 +27,8 @@ skeleton = NodePath("../..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Fracture3D/RigidBody3D"]
 visible = false
 shape = SubResource("ConvexPolygonShape3D_reptw")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.911245, -0.222215, 0.346775, 0, 0.841963, 0.539535, -0.411864, -0.491649, 0.767235, 1.67197, 1.40935, 2.19179)
+
+[node name="DirectionalLight3D" type="OmniLight3D" parent="."]

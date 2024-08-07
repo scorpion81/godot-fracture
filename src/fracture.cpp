@@ -71,7 +71,7 @@ void Fracture3D::execute_fracture() {
 	// make a voro++ container from untransformed bbox, add transformed points into it, discard points out of box
 
 	Ref<Mesh> me = get_mesh();
-	UtilityFunctions::print(me);
+	//UtilityFunctions::print(me);
 
 	AABB bbox = me->get_aabb();
 	Vector3 min = bbox.get_position();
@@ -103,16 +103,16 @@ void Fracture3D::execute_fracture() {
 
 		vh->put(s, x, y, z);
 		//print("%d %f %f %f\n", s, x, y, z);
-		UtilityFunctions::print(s, x, y, z);
+		//UtilityFunctions::print(s, x, y, z);
 	}
 	
 	/* we expect as many raw cells as we have particles */
 	//voro_cells = cells_new(pointcloud->totpoints);
-	UtilityFunctions::print("computing cells");
+	// UtilityFunctions::print("computing cells");
 	vh->compute_cells();
-	UtilityFunctions::print("computed cells");
+	//UtilityFunctions::print("computed cells");
 
-	UtilityFunctions::print(vh->get_cells());
+	//UtilityFunctions::print(vh->get_cells());
 
 	//cells.clear();
 	//cells.append_array(vh.get_cells());

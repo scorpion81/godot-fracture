@@ -41,9 +41,9 @@ VoroHelper::VoroHelper()
     int num_cells = 1;
     cells = TypedArray<VoroCell>();
 	Ref<VoroCell> c(memnew(VoroCell));
-	UtilityFunctions::print(c);
+	// UtilityFunctions::print(c);
     cells.append(c);
-	UtilityFunctions::print(cells[0]);
+	//UtilityFunctions::print(cells[0]);
 }
 
 VoroHelper::~VoroHelper()
@@ -143,7 +143,7 @@ void VoroHelper::compute_cells() {
 			}
 
 			cells.append(c);
-			UtilityFunctions::print(cells[i]);
+			// UtilityFunctions::print(cells[i]);
 
 			/*else { // invalid cell, set NULL XXX TODO (Somehow !!!)
 				Vector3 centr = Vector3(0, 0, 0);
