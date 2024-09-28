@@ -112,36 +112,41 @@ jobs:
     runs-on: macos-latest
     needs: [build-windows, build-linux, build-macos-intel, build-macos-arm]
     steps:
+    - uses: actions/checkout@v4
+        with:
+          submodules: 'true'
     - uses: actions/download-artifact@v4
       with:
         name: windows_bin
+        path: dist
     - uses: actions/download-artifact@v4
       with:
         name: linux_bin
+        path: dist
     - uses: actions/download-artifact@v4
       with:
         name: macos_intel_bin
+        path: dist
     - uses: actions/download-artifact@v4
       with:
         name: macos_arm_bin
+        path: dist
     - uses: actions/setup-python@v5
       with:
-        python-version: '3.11' 
-    #- name: Move artifacts to dist directory
-    #  run: mkdir deps/dist && mv `ls *.whl` deps/dist
+        python-version: '3.11'
     - name: Make universal mac binary
       run: > 
         lipo 
         -create 
-        libfracture.macos.template_release.framework/libfracture.macos.template_release.x86_64 
-        libfracture.macos.template_release.framework/libfracture.macos.template_release.arm64
+        dist/libfracture.macos.template_release.framework/libfracture.macos.template_release.x86_64 
+        dist/libfracture.macos.template_release.framework/libfracture.macos.template_release.arm64
         -output 
-        libfracture.macos.template_release.framework/libfracture.macos.template_release.universal
+        dist/libfracture.macos.template_release.framework/libfracture.macos.template_release.universal
     - name: Zipping the repo without git history
-      run: cd .. && zip -r godot_fracture.zip .
+      run: cd dist && zip -r godot_fracture.zip .
     - name: Upload zip as draft release
       id: upload
       env:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
-      run: python .github/workflows/release.py --path $GITHUB_WORKSPACE/.. --files godot_fracture.zip --version 0.0.1
+      run: python .github/workflows/release.py --path $GITHUB_WORKSPACE/.. --files dist/godot_fracture.zip --version 0.0.1
  
