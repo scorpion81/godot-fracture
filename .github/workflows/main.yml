@@ -77,7 +77,7 @@ jobs:
           python-version: '3.11'
       - name: Install scons
         run: pip install scons
-      - name: Building the windows binary
+      - name: Building the macos intel binary
         run: scons platform=macos arch=x86_64 target=template_release
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -100,7 +100,7 @@ jobs:
           python-version: '3.11'
       - name: Install scons
         run: pip install scons
-      - name: Building the windows binary
+      - name: Building the macos arm binary
         run: scons platform=macos arch=arm64 target=template_release
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -130,12 +130,15 @@ jobs:
     #- name: Move artifacts to dist directory
     #  run: mkdir deps/dist && mv `ls *.whl` deps/dist
     - name: Make universal mac binary
-      run: lipo -create libfracture.macos.template_release.framework.x86_64 libfracture.macos.template_release.framework.arm64 -output libfracture.macos.template_release.framework.universal
+      run: > 
+          lipo -create libfracture.macos.template_release.framework/libfracture.macos.template_release.x86_64 
+           libfracture.macos.template_release.framework/libfracture.macos.template_release.arm64 
+           -output libfracture.macos.template_release.framework/libfracture.macos.template_release.universal
     - name: Zipping the repo without git history
       run: cd .. && zip -r godot_fracture.zip .
     - name: Upload zip as draft release
       id: upload
       env:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
-      run: python .github/workflows/release.py --path $GITHUB_WORKSPACE/.. --files godot_fracture.zip
+      run: python .github/workflows/release.py --path $GITHUB_WORKSPACE/.. --files godot_fracture.zip --version 0.0.1
  

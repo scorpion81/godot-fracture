@@ -26,8 +26,8 @@ if env["target"] == "template_debug":
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(
-        "demo/bin/libfracture.{}.{}.framework/libfracture.{}.{}".format(
-            env["platform"], env["target"], env["platform"], env["target"]
+        "demo/bin/libfracture.{}.{}.framework/libfracture.{}.{}.{}".format(
+            env["platform"], env["target"], env["platform"], env["target"], env["arch"]
         ),
         source=sources,
     )
