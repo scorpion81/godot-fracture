@@ -5,4 +5,3 @@
 [submodule "src/voro"]
 	path = src/voro
 	url = https://github.com/scorpion81/voro
-	ignore = all
