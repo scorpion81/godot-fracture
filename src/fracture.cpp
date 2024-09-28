@@ -87,7 +87,7 @@ void Fracture3D::execute_fracture() {
 	rng->randomize();
 	rng->set_seed(shard_seed);
 
-	UtilityFunctions::print(shard_count, shard_seed);
+	// UtilityFunctions::print(shard_count, shard_seed);
 
 	Ref<VoroHelper> vh(memnew(VoroHelper));
 	vh->set_min(min);

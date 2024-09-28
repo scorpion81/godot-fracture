@@ -135,32 +135,9 @@ void VoroHelper::compute_cells() {
 
 				// volume
 				c->set_volume(vc.volume());
-
-				// valid cell, store
-				// UtilityFunctions::print(c);
-				//cells.append(c);
-				//cells.append(Object::cast_to<VoroCell>(cx));
 			}
 
 			cells.append(c);
-			// UtilityFunctions::print(cells[i]);
-
-			/*else { // invalid cell, set NULL XXX TODO (Somehow !!!)
-				Vector3 centr = Vector3(0, 0, 0);
-				c->set_centroid(centr);
-				c->set_index(0);
-				c->set_neighbors(TypedArray<int>());
-				c->set_num_polys(0);
-				c.set_num_verts(0);
-				c.set_poly_num_verts(TypedArray<int>());
-				c.set_poly_indices(TypedArray<int>());
-				c.set_verts(TypedArray<Vector3>());
-				//UtilityFunctions::print(&c);
-				//cells.append(VoroCell::cast_to<Variant>(cx));
-				//cells.append(Object::cast_to<VoroCell>(cx));
-				UtilityFunctions::print(cells[i]);
-				//cells.append(cx); //Resource::cast_to<VoroCell>(c));
-			}*/
 			i++;
 		}
 		while(vl.inc());
