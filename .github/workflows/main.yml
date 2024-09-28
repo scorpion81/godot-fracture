@@ -118,8 +118,8 @@ jobs:
       with:
         name: macos_arm_bin
     - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11' 
+      with:
+        python-version: '3.11' 
     #- name: Move artifacts to dist directory
     #  run: mkdir deps/dist && mv `ls *.whl` deps/dist
     - name: Make universal mac binary
