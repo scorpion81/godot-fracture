@@ -135,7 +135,7 @@ jobs:
       with:
         python-version: '3.11'
     - name: Install requests
-        run: pip install requests    
+      run: pip install requests    
     - name: Make universal mac binary
       run: > 
         lipo 
@@ -145,7 +145,7 @@ jobs:
         -output 
         dist/libfracture.macos.template_release.framework/libfracture.macos.template_release.universal
     - name: Zipping the repo without git history
-      run: cd dist && zip -r godot_fracture.zip .
+      run: cd dist && zip -r godot_fracture.zip . && cd ..
     - name: Upload zip as draft release
       id: upload
       env:
