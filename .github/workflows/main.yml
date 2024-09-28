@@ -113,8 +113,8 @@ jobs:
     needs: [build-windows, build-linux, build-macos-intel, build-macos-arm]
     steps:
     - uses: actions/checkout@v4
-        with:
-          submodules: 'true'
+      with:
+        submodules: 'true'
     - uses: actions/download-artifact@v4
       with:
         name: windows_bin
