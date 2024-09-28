@@ -2,9 +2,7 @@
 	path = godot-cpp
 	url = https://github.com/godotengine/godot-cpp
 	branch = 4.2
-[submodule "voro"]
-	path = voro
-	url = https://github.com/chr1shr/voro
 [submodule "src/voro"]
 	path = src/voro
-	url = https://github.com/chr1shr/voro
+	url = https://github.com/scorpion81/voro
+	ignore = all
