@@ -131,9 +131,12 @@ jobs:
     #  run: mkdir deps/dist && mv `ls *.whl` deps/dist
     - name: Make universal mac binary
       run: > 
-          lipo -create libfracture.macos.template_release.framework/libfracture.macos.template_release.x86_64 
-           libfracture.macos.template_release.framework/libfracture.macos.template_release.arm64 
-           -output libfracture.macos.template_release.framework/libfracture.macos.template_release.universal
+        lipo 
+        -create 
+        libfracture.macos.template_release.framework/libfracture.macos.template_release.x86_64 
+        libfracture.macos.template_release.framework/libfracture.macos.template_release.arm64
+        -output 
+        libfracture.macos.template_release.framework/libfracture.macos.template_release.universal
     - name: Zipping the repo without git history
       run: cd .. && zip -r godot_fracture.zip .
     - name: Upload zip as draft release
