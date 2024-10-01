@@ -31,6 +31,8 @@ jobs:
           python-version: '3.11'
       - name: Install scons
         run: pip install scons
+      - name: Install libeigen3-dev
+        run: apt install libeigen3-dev
       - name: Build voro++
         run: >
           mkdir -p external/build/voro
@@ -88,7 +90,7 @@ jobs:
           -DVORO_BUILD_CMD_LINE=False 
           -DVORO_ENABLE_DOXYGEN=False
           &&
-          nmake
+          msbuild
       - name: Build cork
         run: > 
           mkdir -p external/build/pycork
@@ -99,7 +101,7 @@ jobs:
           -D_BUILD_PYTHON=False
           -D_BUILD_STATIC=True
           &&
-          nmake
+          msbuild
       - name: Building the windows binary
         run: scons platform=windows target=template_release
       - name: Upload artifact
@@ -123,6 +125,8 @@ jobs:
           python-version: '3.11'
       - name: Install scons
         run: pip install scons
+      - name: Install eigen
+        run: brew install eigen
       - name: Build voro++
         run: > 
           mkdir -p external/build/voro
@@ -169,6 +173,8 @@ jobs:
           python-version: '3.11'
       - name: Install scons
         run: pip install scons
+      - name: Install eigen
+        run: brew install eigen
       - name: Build voro++
         run: > 
           mkdir -p external/build/voro
