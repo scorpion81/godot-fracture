@@ -32,7 +32,9 @@ jobs:
       - name: Install scons
         run: pip install scons
       - name: Build voro++
-        run: > 
+        run: >
+          mkdir -p external/build/voro
+          &&
           cd external/build/voro
           &&
           cmake ../../voro/
@@ -43,6 +45,8 @@ jobs:
           make
       - name: Build cork
         run: > 
+          mkdir -p external/build/pycork
+          &&
           cd external/build/pycork 
           &&
           cmake ../../pycork/
@@ -75,6 +79,8 @@ jobs:
         run: pip install scons
       - name: Build voro++
         run: > 
+          mkdir -p external/build/voro
+          &&
           cd external/build/voro
           &&
           cmake ../../voro/
@@ -85,6 +91,8 @@ jobs:
           nmake
       - name: Build cork
         run: > 
+          mkdir -p external/build/pycork
+          &&
           cd external/build/pycork 
           &&
           cmake ../../pycork/
@@ -117,6 +125,8 @@ jobs:
         run: pip install scons
       - name: Build voro++
         run: > 
+          mkdir -p external/build/voro
+          &&
           cd external/build/voro 
           &&
           cmake ../../voro/
@@ -126,7 +136,9 @@ jobs:
           &&
           make
       - name: Build cork
-        run: > 
+        run: >
+          mkdir -p external/build/pycork
+          && 
           cd external/build/pycork
           &&
           cmake ../../pycork/
@@ -159,6 +171,8 @@ jobs:
         run: pip install scons
       - name: Build voro++
         run: > 
+          mkdir -p external/build/voro
+          &&
           cd external/build/voro 
           &&
           cmake ../../voro/
@@ -169,6 +183,8 @@ jobs:
           make
       - name: Build cork
         run: > 
+          mkdir -p external/build/pycork
+          &&
           cd external/build/pycork
           &&
           cmake ../../pycork/
