@@ -73,7 +73,7 @@ jobs:
           python-version: '3.11'
       - name: Install wheel and requests
         run: pip install scons
-       - name: Build voro++
+      - name: Build voro++
         run: > 
           cd external/build/voro
           &&
@@ -82,7 +82,7 @@ jobs:
           -DVORO_BUILD_CMD_LINE=False 
           -DVORO_ENABLE_DOXYGEN=False
           &&
-          make
+          nmake
       - name: Build cork
         run: > 
           cd external/build/pycork 
@@ -115,7 +115,7 @@ jobs:
           python-version: '3.11'
       - name: Install scons
         run: pip install scons
-     - name: Build voro++
+      - name: Build voro++
         run: > 
           cd external/build/voro 
           &&
