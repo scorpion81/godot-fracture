@@ -52,8 +52,8 @@ jobs:
           cd external/build/pycork 
           &&
           cmake ../../pycork/
-          -D_BUILD_PYTHON=False
-          -D_BUILD_STATIC=True
+          -DBUILD_PYTHON=False
+          -DBUILD_STATIC=True
           &&
           make
       - name: Building the linux binary
@@ -79,6 +79,8 @@ jobs:
           python-version: '3.11'
       - name: Install wheel and requests
         run: pip install scons
+      - name: Install nmake
+        run: winget install nmake
       - name: Build voro++
         run: > 
           mkdir -p external/build/voro
@@ -90,7 +92,7 @@ jobs:
           -DVORO_BUILD_CMD_LINE=False 
           -DVORO_ENABLE_DOXYGEN=False
           &&
-          msbuild
+          nmake
       - name: Build cork
         run: > 
           mkdir -p external/build/pycork
@@ -98,10 +100,10 @@ jobs:
           cd external/build/pycork 
           &&
           cmake ../../pycork/
-          -D_BUILD_PYTHON=False
-          -D_BUILD_STATIC=True
+          -DBUILD_PYTHON=False
+          -DBUILD_STATIC=True
           &&
-          msbuild
+          nmake
       - name: Building the windows binary
         run: scons platform=windows target=template_release
       - name: Upload artifact
@@ -146,8 +148,8 @@ jobs:
           cd external/build/pycork
           &&
           cmake ../../pycork/
-          -D_BUILD_PYTHON=False
-          -D_BUILD_STATIC=True
+          -DBUILD_PYTHON=False
+          -DBUILD_STATIC=True
           &&
           make
       - name: Building the macos intel binary
@@ -194,8 +196,8 @@ jobs:
           cd external/build/pycork
           &&
           cmake ../../pycork/
-          -D_BUILD_PYTHON=False
-          -D_BUILD_STATIC=True
+          -DBUILD_PYTHON=False
+          -DBUILD_STATIC=True
           &&
           make
       - name: Building the macos arm binary
