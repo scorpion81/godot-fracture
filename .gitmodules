@@ -2,6 +2,9 @@
 	path = godot-cpp
 	url = https://github.com/godotengine/godot-cpp
 	branch = 4.2
-[submodule "src/voro"]
-	path = src/voro
+[submodule "external/voro"]
+	path = external/voro
 	url = https://github.com/scorpion81/voro
+[submodule "external/pycork"]
+	path = external/pycork
+	url = https://github.com/scorpion81/pycork

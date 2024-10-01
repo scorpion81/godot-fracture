@@ -5,7 +5,7 @@
 #include <godot_cpp/classes/resource.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
-#include <voro/src/voro++.hh>
+#include <../external/voro/src/voro++.hh>
 
 using namespace voro;
 

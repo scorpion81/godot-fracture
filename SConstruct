@@ -13,13 +13,8 @@ env = SConscript("godot-cpp/SConstruct")
 # - LINKFLAGS are for linking flags
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
-env.Append(CPPPATH=["src/", "src/voro/src/"])
+env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
-sources.extend(Glob("src/voro/src/*.cc"))
-sources = [s for s in sources if not "_wl" in s.name]
-sources = [s for s in sources if not "voro++" in s.name]
-#names = [s.name for s in sources]
-#print(names)
 
 if env["target"] == "template_debug":
     env.Append(CPPDEFINES=["DEBUG_ENABLED", "DEBUG_METHODS_ENABLED"])
@@ -30,11 +25,15 @@ if env["platform"] == "macos":
             env["platform"], env["target"], env["platform"], env["target"], env["arch"]
         ),
         source=sources,
+        LIBPATH=['external/build/voro','external/build/pycork'],
+        LIBS=['voro++', 'cork']
     )
 else:
     library = env.SharedLibrary(
         "demo/bin/libfracture{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
         source=sources,
+        LIBPATH=['external/build/voro','external/build/pycork'],
+        LIBS=['voro++', 'cork']
     )
 
 Default(library)

@@ -31,6 +31,25 @@ jobs:
           python-version: '3.11'
       - name: Install scons
         run: pip install scons
+      - name: Build voro++
+        run: > 
+          cd external/build/voro
+          &&
+          cmake ../../voro/
+          -DVORO_BUILD_EXAMPLES=False 
+          -DVORO_BUILD_CMD_LINE=False 
+          -DVORO_ENABLE_DOXYGEN=False
+          &&
+          make
+      - name: Build cork
+        run: > 
+          cd external/build/pycork 
+          &&
+          cmake ../../pycork/
+          -D_BUILD_PYTHON=False
+          -D_BUILD_STATIC=True
+          &&
+          make
       - name: Building the linux binary
         run: scons platform=linux target=template_release
       - name: Upload artifact
@@ -54,6 +73,25 @@ jobs:
           python-version: '3.11'
       - name: Install wheel and requests
         run: pip install scons
+       - name: Build voro++
+        run: > 
+          cd external/build/voro
+          &&
+          cmake ../../voro/
+          -DVORO_BUILD_EXAMPLES=False 
+          -DVORO_BUILD_CMD_LINE=False 
+          -DVORO_ENABLE_DOXYGEN=False
+          &&
+          make
+      - name: Build cork
+        run: > 
+          cd external/build/pycork 
+          &&
+          cmake ../../pycork/
+          -D_BUILD_PYTHON=False
+          -D_BUILD_STATIC=True
+          &&
+          nmake
       - name: Building the windows binary
         run: scons platform=windows target=template_release
       - name: Upload artifact
@@ -77,6 +115,25 @@ jobs:
           python-version: '3.11'
       - name: Install scons
         run: pip install scons
+     - name: Build voro++
+        run: > 
+          cd external/build/voro 
+          &&
+          cmake ../../voro/
+          -DVORO_BUILD_EXAMPLES=False 
+          -DVORO_BUILD_CMD_LINE=False 
+          -DVORO_ENABLE_DOXYGEN=False
+          &&
+          make
+      - name: Build cork
+        run: > 
+          cd external/build/pycork
+          &&
+          cmake ../../pycork/
+          -D_BUILD_PYTHON=False
+          -D_BUILD_STATIC=True
+          &&
+          make
       - name: Building the macos intel binary
         run: scons platform=macos arch=x86_64 target=template_release
       - name: Upload artifact
@@ -100,6 +157,25 @@ jobs:
           python-version: '3.11'
       - name: Install scons
         run: pip install scons
+      - name: Build voro++
+        run: > 
+          cd external/build/voro 
+          &&
+          cmake ../../voro/
+          -DVORO_BUILD_EXAMPLES=False 
+          -DVORO_BUILD_CMD_LINE=False
+          -DVORO_ENABLE_DOXYGEN=False
+          &&
+          make
+      - name: Build cork
+        run: > 
+          cd external/build/pycork
+          &&
+          cmake ../../pycork/
+          -D_BUILD_PYTHON=False
+          -D_BUILD_STATIC=True
+          &&
+          make
       - name: Building the macos arm binary
         run: scons platform=macos arch=arm64 target=template_release
       - name: Upload artifact
