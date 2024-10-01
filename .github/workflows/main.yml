@@ -79,8 +79,8 @@ jobs:
           python-version: '3.11'
       - name: Install wheel and requests
         run: pip install scons
-      - name: Install nmake
-        run: winget install nmake
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
       - name: Build voro++
         run: > 
           mkdir -p external/build/voro
@@ -92,7 +92,7 @@ jobs:
           -DVORO_BUILD_CMD_LINE=False 
           -DVORO_ENABLE_DOXYGEN=False
           &&
-          nmake
+          msbuild -property:Configuration=Release
       - name: Build cork
         run: > 
           mkdir -p external/build/pycork
@@ -103,7 +103,7 @@ jobs:
           -DBUILD_PYTHON=False
           -DBUILD_STATIC=True
           &&
-          nmake
+          msbuild -property:Configuration=Release
       - name: Building the windows binary
         run: scons platform=windows target=template_release
       - name: Upload artifact
