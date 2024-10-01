@@ -92,7 +92,7 @@ jobs:
           -DVORO_BUILD_CMD_LINE=False 
           -DVORO_ENABLE_DOXYGEN=False
           &&
-          msbuild -property:Configuration=Release
+          msbuild voro++.sln -property:Configuration=Release
       - name: Build cork
         run: > 
           mkdir -p external/build/pycork
@@ -103,7 +103,7 @@ jobs:
           -DBUILD_PYTHON=False
           -DBUILD_STATIC=True
           &&
-          msbuild -property:Configuration=Release
+          msbuild cork.sln -property:Configuration=Release
       - name: Building the windows binary
         run: scons platform=windows target=template_release
       - name: Upload artifact
