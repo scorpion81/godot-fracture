@@ -103,7 +103,7 @@ jobs:
           -DBUILD_PYTHON=False
           -DBUILD_STATIC=True
           &&
-          msbuild cork.sln -property:Configuration=Release
+          msbuild pycork.sln -property:Configuration=Release
       - name: Building the windows binary
         run: scons platform=windows target=template_release
       - name: Upload artifact
