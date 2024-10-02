@@ -3,9 +3,9 @@
 
 #include <godot_cpp/core/class_db.hpp>
 
-using namespace godot;
+// using namespace godot;
 
-void initialize_fracture_module(ModuleInitializationLevel p_level);
-void uninitialize_fracture_module(ModuleInitializationLevel p_level);
+void initialize_fracture_module(godot::ModuleInitializationLevel p_level);
+void uninitialize_fracture_module(godot::ModuleInitializationLevel p_level);
 
 #endif // FRACTURE_REGISTER_TYPES_H

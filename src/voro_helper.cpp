@@ -1,6 +1,9 @@
 #include <voro_helper.h>
 #include <memory>
 
+#include <voro++.hh>
+#include <cork.h>
+
 using namespace godot;
 
 VoroCell::VoroCell() {

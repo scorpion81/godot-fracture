@@ -7,20 +7,18 @@
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
 
-using namespace godot;
-
-void initialize_fracture_module(ModuleInitializationLevel p_level) {
-	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
+void initialize_fracture_module(godot::ModuleInitializationLevel p_level) {
+	if (p_level != godot::MODULE_INITIALIZATION_LEVEL_SCENE) {
 		return;
 	}
 
-	GDREGISTER_CLASS(VoroCell);
-	GDREGISTER_CLASS(VoroHelper);
-	GDREGISTER_CLASS(Fracture3D);
+	GDREGISTER_CLASS(godot::VoroCell);
+	GDREGISTER_CLASS(godot::VoroHelper);
+	GDREGISTER_CLASS(godot::Fracture3D);
 }
 
-void uninitialize_fracture_module(ModuleInitializationLevel p_level) {
-	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
+void uninitialize_fracture_module(godot::ModuleInitializationLevel p_level) {
+	if (p_level != godot::MODULE_INITIALIZATION_LEVEL_SCENE) {
 		return;
 	}
 }
@@ -32,7 +30,7 @@ GDExtensionBool GDE_EXPORT fracture_library_init(GDExtensionInterfaceGetProcAddr
 
 	init_obj.register_initializer(initialize_fracture_module);
 	init_obj.register_terminator(uninitialize_fracture_module);
-	init_obj.set_minimum_library_initialization_level(MODULE_INITIALIZATION_LEVEL_SCENE);
+	init_obj.set_minimum_library_initialization_level(godot::MODULE_INITIALIZATION_LEVEL_SCENE);
 
 	return init_obj.init();
 }
