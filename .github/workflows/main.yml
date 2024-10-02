@@ -46,7 +46,7 @@ jobs:
           -DCMAKE_CXX_FLAGS="-fPIC"
           -DCMAKE_INSTALL_PREFIX=../../dist/voro
           &&
-          make
+          make install
       - name: Build cork
         run: > 
           mkdir -p external/build/pycork
@@ -58,7 +58,7 @@ jobs:
           -DBUILD_STATIC=True
           -DCMAKE_INSTALL_PREFIX=../../dist/pycork
           &&
-          make
+          make install
       - name: Building the linux binary
         run: scons platform=linux target=template_release
       - name: Upload artifact
@@ -96,7 +96,7 @@ jobs:
           -DVORO_ENABLE_DOXYGEN=False
           -DCMAKE_INSTALL_PREFIX=../../dist/voro
           &&
-          msbuild voro++.sln -property:Configuration=Release
+          msbuild INSTALL.vcxproj -property:Configuration=Release
       - name: Build cork
         run: > 
           mkdir -p external/build/pycork
@@ -108,7 +108,7 @@ jobs:
           -DBUILD_STATIC=True
           -DCMAKE_INSTALL_PREFIX=../../dist/pycork
           &&
-          msbuild pycork.sln -property:Configuration=Release
+          msbuild INSTALL.vcxproj -property:Configuration=Release
       - name: Building the windows binary
         run: scons platform=windows target=template_release
       - name: Upload artifact
@@ -146,7 +146,7 @@ jobs:
           -DVORO_ENABLE_DOXYGEN=False
           -DCMAKE_INSTALL_PREFIX=../../dist/voro
           &&
-          make
+          make install
       - name: Build cork
         run: >
           mkdir -p external/build/pycork
@@ -158,7 +158,7 @@ jobs:
           -DBUILD_STATIC=True
           -DCMAKE_INSTALL_PREFIX=../../dist/pycork
           &&
-          make
+          make install
       - name: Building the macos intel binary
         run: scons platform=macos arch=x86_64 target=template_release
       - name: Upload artifact
@@ -196,7 +196,7 @@ jobs:
           -DVORO_ENABLE_DOXYGEN=False
           -DCMAKE_INSTALL_PREFIX=../../dist/voro
           &&
-          make
+          make install
       - name: Build cork
         run: > 
           mkdir -p external/build/pycork
@@ -208,7 +208,7 @@ jobs:
           -DBUILD_STATIC=True
           -DCMAKE_INSTALL_PREFIX=../../dist/pycork
           &&
-          make
+          make install
       - name: Building the macos arm binary
         run: scons platform=macos arch=arm64 target=template_release
       - name: Upload artifact
