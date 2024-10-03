@@ -24,7 +24,7 @@ sources = Glob("src/*.cpp")
 if env["target"] == "template_debug":
     env.Append(CPPDEFINES=["DEBUG_ENABLED", "DEBUG_METHODS_ENABLED"])
 
-if env["target"] == "windows":
+if env["platform"] == "windows":
     env.Append(CPPDEFINES=["_USE_MATH_DEFINES"])
 
 if env["platform"] == "macos":
