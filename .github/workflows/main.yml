@@ -94,7 +94,7 @@ jobs:
           -DVORO_BUILD_EXAMPLES=False 
           -DVORO_BUILD_CMD_LINE=False 
           -DVORO_ENABLE_DOXYGEN=False
-          -DCMAKE_INSTALL_PREFIX=../../dist/voro
+          -DCMAKE_INSTALL_PREFIX="../../dist/voro"
           &&
           cmake --build . --target ALL_BUILD --config Release
           &&
@@ -108,7 +108,7 @@ jobs:
           cmake ../../pycork/
           -DBUILD_PYTHON=False
           -DBUILD_STATIC=True
-          -DCMAKE_INSTALL_PREFIX=../../dist/pycork
+          -DCMAKE_INSTALL_PREFIX="../../dist/pycork"
           &&
           cmake --build . --target ALL_BUILD --config Release
           &&
