@@ -34,14 +34,16 @@ if env["platform"] == "macos":
         ),
         source=sources,
         LIBPATH=['external/dist/voro/lib','external/dist/pycork/lib/cork'],
-        LIBS=['voro++', 'cork']
+        LIBS=['voro++', 'cork'],
+       # LINKFLAGS=['-Wl,--whole-archive', '-lvoro++', '-lcork']
     )
 else:
     library = env.SharedLibrary(
         "demo/bin/libfracture{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
         source=sources,
         LIBPATH=['external/dist/voro/lib','external/dist/pycork/lib/cork'],
-        LIBS=['voro++', 'cork']
+        LIBS=['voro++', 'cork'],
+        #LINKFLAGS=['-Wl,--whole-archive', '-lvoro++', '-lcork']
     )
 
 Default(library)

@@ -1,6 +1,6 @@
 .vscode
 *.os
 *.so
-*.dblite
+.sconsign.dblite
 build
 dist
